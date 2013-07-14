@@ -3559,6 +3559,11 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                 {
                     int32 bp = damage;
                     m_caster->CastCustomSpell(unitTarget, 47632, &bp, NULL, NULL, true);
+
+                    int32 unholyBp = bp/10; // 10% of death coil's damage
+                    if((Player*)m_caster->HasSpell(49194))
+                        m_caster->CastCustomSpell(unitTarget, 50536, &unholyBp, NULL, NULL, true);
+                        //m_caster->CastSpell(unitTarget, 50536, true);
                 }
                 return;
             }
@@ -3600,6 +3605,16 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                 }
 
                 m_caster->CastCustomSpell(m_caster, 45470, &bp, NULL, NULL, true);
+                return;
+            }
+            // Death Grip
+            else if (m_spellInfo->Id == 49576)
+            {
+                if (!unitTarget)
+                    return;
+
+                m_caster->CastSpell(unitTarget, 49560, true);
+                unitTarget->UpdateSpeed(MOVE_RUN, true, 2.0);
                 return;
             }
             // Obliterate
@@ -6605,6 +6620,8 @@ void Spell::EffectWeaponDmg(SpellEffectIndex eff_idx)
         {
             // Blood Strike, Heart Strike, Obliterate
             // Blood-Caked Strike
+//todo for froid: check if the spell/aura blood of the north is cast, and if so (for this spell & pestilince)
+// then convert the current rune into a blood rune (Player->SetCurrentRune())
             if (m_spellInfo->SpellFamilyFlags & UI64LIT(0x0002000001400000) ||
                     m_spellInfo->SpellIconID == 1736)
             {
@@ -9021,6 +9038,63 @@ void Spell::EffectScriptEffect(SpellEffectIndex eff_idx)
                         m_caster->CastSpell(unitTarget, 55095, true);
 
                     break;
+                }
+                case 46584: // Raise dead (from R2)
+                {
+                    if(!unitTarget || m_caster->GetTypeId() != TYPEID_PLAYER)
+                        return;
+
+                    // If have 52143 spell - summoned pet from dummy effect
+                    // Another case summoned guardian from script effect
+                    uint32 triggered_spell_id = m_spellInfo->CalculateSimpleValue(SpellEffectIndex(m_caster->HasSpell(52143) ? EFFECT_INDEX_2 : EFFECT_INDEX_1));
+
+                    float x,y,z;
+
+                    m_caster->GetClosePoint(x, y, z, m_caster->GetObjectBoundingRadius(), PET_FOLLOW_DIST);
+
+                    if (unitTarget != (Unit*)m_caster)
+                    {
+                        m_caster->CastSpell(unitTarget->GetPositionX(),unitTarget->GetPositionY(),unitTarget->GetPositionZ(),triggered_spell_id, true, NULL, NULL, m_caster->GetObjectGuid(), m_spellInfo);
+                    }
+                    else if (m_caster->HasAura(60200))
+                    {
+                        m_caster->CastSpell(x,y,z,triggered_spell_id, true, NULL, NULL, m_caster->GetObjectGuid(), m_spellInfo);
+                    }
+                    else if (((Player*)m_caster)->HasItemCount(37201,1))
+                    {
+                        m_caster->CastSpell(m_caster,48289,true);
+                        m_caster->CastSpell(x,y,z,triggered_spell_id, true, NULL, NULL, m_caster->GetObjectGuid(), m_spellInfo);
+                    }
+                    else
+                    {
+                        SendCastResult(SPELL_FAILED_REAGENTS);
+                        finish(true);
+                        CancelGlobalCooldown();
+                        return;
+                    }
+                    finish(true);
+                    m_caster->GetCharmerOrOwnerPlayerOrPlayerItself()->RemoveSpellCooldown(m_spellInfo->CalculateSimpleValue(EFFECT_INDEX_2),true);
+                    m_caster->GetCharmerOrOwnerPlayerOrPlayerItself()->RemoveSpellCooldown(m_spellInfo->CalculateSimpleValue(EFFECT_INDEX_1),true);
+                    CancelGlobalCooldown();
+                    return;
+                }
+                case 61999:     // Raise ally
+                {
+                    if (m_caster->GetTypeId() != TYPEID_PLAYER)
+                        return;
+
+                    if (!unitTarget || unitTarget->GetTypeId() != TYPEID_PLAYER || unitTarget->isAlive())
+                    {
+                        SendCastResult(SPELL_FAILED_TARGET_NOT_DEAD);
+                        finish(true);
+                        CancelGlobalCooldown();
+                        return;
+                    }
+
+                    // hack to remove death
+                    unitTarget->CastSpell(unitTarget, m_spellInfo->CalculateSimpleValue(EFFECT_INDEX_0), true);
+                    CancelGlobalCooldown();
+                    return;
                 }
             }
             break;

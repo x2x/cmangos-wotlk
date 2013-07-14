@@ -93,6 +93,7 @@ void WorldSession::HandlePetAction(WorldPacket& recv_data)
                     break;
                 case COMMAND_FOLLOW:                        // spellid=1792  // FOLLOW
                     pet->AttackStop();
+                    pet->InterruptNonMeleeSpells(false);
                     pet->GetMotionMaster()->MoveFollow(_player, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
                     charmInfo->SetCommandState(COMMAND_FOLLOW);
                     break;
@@ -160,6 +161,8 @@ void WorldSession::HandlePetAction(WorldPacket& recv_data)
             switch (spellid)
             {
                 case REACT_PASSIVE:                         // passive
+                    pet->AttackStop();
+                    pet->InterruptNonMeleeSpells(false);
                 case REACT_DEFENSIVE:                       // recovery
                 case REACT_AGGRESSIVE:                      // activete
                     charmInfo->SetReactState(ReactStates(spellid));
@@ -240,7 +243,7 @@ void WorldSession::HandlePetAction(WorldPacket& recv_data)
                 if (unit_target && !GetPlayer()->IsFriendlyTo(unit_target) && !pet->HasAuraType(SPELL_AURA_MOD_POSSESS))
                 {
                     // This is true if pet has no target or has target but targets differs.
-                    if (pet->getVictim() != unit_target)
+                    if (pet->getVictim() != unit_target && !pet->GetCharmInfo()->HasReactState(REACT_PASSIVE))
                     {
                         if (pet->getVictim())
                             pet->AttackStop();

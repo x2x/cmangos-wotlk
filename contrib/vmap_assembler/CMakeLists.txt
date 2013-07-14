@@ -27,8 +27,13 @@ include_directories(../../dep/include/g3dlite/)
 include_directories(../../dep/ACE_wrappers/)
 include_directories(../../objdir/dep/ACE_wrappers)
 include_directories(../../src/framework/)
+#include_directories(
+# ${ACE_INCLUDE_DIR}
+# ${ZLIB_INCLUDE_DIR}
+#)
 
-add_library(g3dlite ../../dep/src/g3dlite/AABox.cpp
+add_library(g3dlite STATIC
+	../../dep/src/g3dlite/AABox.cpp
 	../../dep/src/g3dlite/Box.cpp
 	../../dep/src/g3dlite/Crypto.cpp
 	../../dep/src/g3dlite/format.cpp
@@ -66,9 +71,14 @@ add_library(g3dlite ../../dep/src/g3dlite/AABox.cpp
 	../../dep/src/g3dlite/TextOutput.cpp
 	../../dep/src/g3dlite/UprightFrame.cpp
 	../../dep/src/g3dlite/Vector2.cpp
+	../../dep/src/g3dlite/uint128.cpp
+	../../dep/src/g3dlite/FileSystem.cpp
+	../../dep/src/g3dlite/PhysicsFrame.cpp
 	)
 
-add_library(vmap
+target_link_libraries(g3dlite z)
+
+add_library(vmap STATIC
 	../../src/game/vmap/BIH.cpp
 	../../src/game/vmap/VMapManager2.cpp
 	../../src/game/vmap/MapTree.cpp
@@ -80,7 +90,7 @@ add_library(vmap
 target_link_libraries(vmap g3dlite z)
 
 add_executable(vmap_assembler vmap_assembler.cpp)
-target_link_libraries(vmap_assembler vmap)
+target_link_libraries(vmap_assembler g3dlite vmap)
 
 # add_executable(vmap_test coordinate_test.cpp)
 # target_link_libraries(vmap_test vmap)

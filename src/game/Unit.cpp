@@ -885,9 +885,11 @@ uint32 Unit::DealDamage(Unit* pVictim, uint32 damage, CleanDamage const* cleanDa
         {
             if (!getVictim())
             {
+                CharmInfo* tempCharmInfo = GetCharmInfo();
+                if(GetTypeId() != TYPEID_UNIT || !((Creature*)this)->IsPet() || (!hasUnitState(UNIT_STAT_FOLLOW_MOVE) && tempCharmInfo &&  !tempCharmInfo->HasReactState(REACT_PASSIVE)))
                 // if not have main target then attack state with target (including AI call)
                 // start melee attacks only after melee hit
-                Attack(pVictim, (damagetype == DIRECT_DAMAGE));
+                    Attack(pVictim, (damagetype == DIRECT_DAMAGE));
             }
 
             // if damage pVictim call AI reaction

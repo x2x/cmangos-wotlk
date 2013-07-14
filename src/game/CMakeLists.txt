@@ -307,6 +307,8 @@ set(LIBRARY_SRCS
     TotemAI.cpp
     TotemAI.h
     TradeHandler.cpp
+    Transmog/Transmog.cpp
+    Transmog/Transmog.h
     Transports.cpp
     Transports.h
     TransportSystem.cpp

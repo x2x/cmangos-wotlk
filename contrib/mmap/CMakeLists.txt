@@ -31,24 +31,24 @@ include_directories(
     ../../objdir/dep/ACE_wrappers
     ../../dep/recastnavigation/Detour/Include
     ../../dep/recastnavigation/Recast/Include
-    ../../dep/src/zlib
+  #  ../../dep/src/zlib
 )
 
-add_library(zlib
-    ../../dep/src/zlib/adler32.c
-    ../../dep/src/zlib/compress.c
-    ../../dep/src/zlib/crc32.c
-    ../../dep/src/zlib/deflate.c
-    ../../dep/src/zlib/example.c
-    ../../dep/src/zlib/gzio.c
-    ../../dep/src/zlib/infback.c
-    ../../dep/src/zlib/inffast.c
-    ../../dep/src/zlib/inflate.c
-    ../../dep/src/zlib/inftrees.c
-    ../../dep/src/zlib/trees.c
-    ../../dep/src/zlib/uncompr.c
-    ../../dep/src/zlib/zutil.c
-)
+#add_library(zlib
+#    ../../dep/src/zlib/adler32.c
+#    ../../dep/src/zlib/compress.c
+#    ../../dep/src/zlib/crc32.c
+#    ../../dep/src/zlib/deflate.c
+#    ../../dep/src/zlib/example.c
+#    ../../dep/src/zlib/gzio.c
+#    ../../dep/src/zlib/infback.c
+#    ../../dep/src/zlib/inffast.c
+#    ../../dep/src/zlib/inflate.c
+#    ../../dep/src/zlib/inftrees.c
+#    ../../dep/src/zlib/trees.c
+#    ../../dep/src/zlib/uncompr.c
+#    ../../dep/src/zlib/zutil.c
+#)
 
 add_library(g3dlite
     ../../dep/src/g3dlite/AABox.cpp
@@ -130,6 +130,7 @@ add_library(g3dlite
     ../../dep/src/g3dlite/Vector4int8.cpp
     ../../dep/src/g3dlite/Welder.cpp
     ../../dep/src/g3dlite/WinMain.cpp
+    ../../dep/src/g3dlite/FileSystem.cpp
 )
 
 add_library(vmap
@@ -141,7 +142,7 @@ add_library(vmap
 	../../src/game/vmap/ModelInstance.cpp
 )
 
-target_link_libraries(vmap g3dlite zlib)
+target_link_libraries(vmap g3dlite z)
 
 add_library(Detour
     ../../dep/recastnavigation/Detour/Source/DetourAlloc.cpp
@@ -174,4 +175,4 @@ set(SOURCES
 
 add_executable( MoveMapGen ${SOURCES} )
 
-target_link_libraries( MoveMapGen g3dlite vmap Detour Recast zlib )
+target_link_libraries( MoveMapGen g3dlite vmap Detour Recast z )

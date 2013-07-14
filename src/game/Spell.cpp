@@ -6238,6 +6238,38 @@ bool Spell::CanAutoCast(Unit* target)
                         return false;
             }
         }
+        else if (m_spellInfo->Effect[j] == SPELL_EFFECT_DISPEL)     //check if cast makes sense
+        {
+            // Create dispel mask by dispel type
+            uint32 dispel_type = m_spellInfo->EffectMiscValue[j];
+            uint32 dispelMask  = GetDispellMask( DispelType(dispel_type) );
+            Unit::SpellAuraHolderMap const& auras = unitTarget->GetSpellAuraHolderMap();
+            for(Unit::SpellAuraHolderMap::const_iterator itr = auras.begin(); itr != auras.end(); ++itr)
+            {
+                SpellAuraHolder *holder = itr->second;
+                if ((1<<holder->GetSpellProto()->Dispel) & dispelMask)
+                {
+                    if(holder->GetSpellProto()->Dispel == DISPEL_MAGIC)
+                    {
+                        bool positive = true;
+                        if (!holder->IsPositive())
+                            positive = false;
+                        else
+                            positive = (holder->GetSpellProto()->AttributesEx & SPELL_ATTR_EX_NEGATIVE)==0;
+
+                        // do not remove positive auras if friendly target
+                        //               negative auras if non-friendly target
+                        if (positive == unitTarget->IsFriendlyTo(m_caster))
+                            continue;
+                    }
+                    return true;
+                }
+            }
+        }
+        else if (m_spellInfo->EffectApplyAuraName[j] == SPELL_AURA_DAMAGE_SHIELD)
+        {
+            return !target->getAttackers().empty();
+        }
         else if (IsAreaAuraEffect(m_spellInfo->Effect[j]))
         {
             if (target->HasAura(m_spellInfo->Id, SpellEffectIndex(j)))

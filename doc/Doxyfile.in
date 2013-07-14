@@ -25,13 +25,13 @@ DOXYFILE_ENCODING      = UTF-8
 # The PROJECT_NAME tag is a single word (or a sequence of words surrounded
 # by quotes) that should identify the project.
 
-PROJECT_NAME           = @PACKAGE@
+PROJECT_NAME           = CMaNGOS
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number.
 # This could be handy for archiving the generated documentation or
 # if some version control system is used.
 
-PROJECT_NUMBER         = @VERSION@
+PROJECT_NUMBER         = WoTLK
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute)
 # base path where the generated documentation will be put.
@@ -113,7 +113,7 @@ FULL_PATH_NAMES        = NO
 # If left blank the directory from which doxygen is run is used as the
 # path to strip.
 
-STRIP_FROM_PATH        = @top_srcdir@/
+STRIP_FROM_PATH        = ../
 
 # The STRIP_FROM_INC_PATH tag can be used to strip a user-defined part of
 # the path mentioned in the documentation of a class, which tells
@@ -483,12 +483,12 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT                  = @top_srcdir@/src/shared/ \
-                         @top_srcdir@/src/shared/Auth/ \
-                         @top_srcdir@/src/shared/Database/ \
-                         @top_srcdir@/src/game/ \
-                         @top_srcdir@/src/realmd/ \
-                         @top_srcdir@/src/mangosd/ \
+INPUT                  = ../src/shared/ \
+                         ../src/shared/Auth/ \
+                         ../src/shared/Database/ \
+                         ../src/game/ \
+                         ../src/realmd/ \
+                         ../src/mangosd/ \
                          DocStructure.dox
 
 # This tag can be used to specify the character encoding of the source files that
@@ -1115,7 +1115,7 @@ TAGFILES               =
 # When a file name is specified after GENERATE_TAGFILE, doxygen will create
 # a tag file that is based on the input files it reads.
 
-GENERATE_TAGFILE       = "@srcdir@/html/mangos-ng-docs.tag "
+GENERATE_TAGFILE       = "./html/mangos-ng-docs.tag "
 
 # If the ALLEXTERNALS tag is set to YES all external classes will be listed
 # in the class index. If set to NO only the inherited external classes

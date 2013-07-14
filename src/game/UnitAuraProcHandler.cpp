@@ -3488,6 +3488,18 @@ SpellAuraProcResult Unit::HandleProcTriggerSpellAuraProc(Unit* pVictim, uint32 d
                 basepoints[0] = triggerAmount * damage / 100;
                 trigger_spell_id = 50475;
             }
+            // Unholy Blight
+            /*else if (auraSpellInfo->Id == 49194)
+            {
+                if (GetTypeId() != TYPEID_PLAYER || getClass() != CLASS_DEATH_KNIGHT || !pVictim->IsHostileTo(this))
+                    return SPELL_AURA_PROC_FAILED;
+
+                basepoints[0] = damage / 10;
+                target = pVictim;
+                trigger_spell_id = 50536;
+
+                //CastCustomSpell(target, 50536, &basepoints[0], NULL, NULL, true, NULL, triggeredByAura);
+            }*/
             break;
         }
         default:
