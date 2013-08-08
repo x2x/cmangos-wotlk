@@ -32,22 +32,24 @@ class Transmogrification
     	Transmogrification();
 
         void Initialize();
-        void DeleteItemFromDB(uint32 guidLow);
-		uint32 GetDisplayItemEntry(uint32 guidLow);
-		uint32 CanBeTransmogrified(Item* originalItem, Item* displayItem, Player* owner);
+        void DeleteItemFromDB(Player* owner, uint32 guidLow);
+	uint32 GetDisplayItemEntry(Player* owner, uint32 guidLow);
+	uint32 CanBeTransmogrified(Item* originalItem, Item* displayItem, Player* owner);
 
 
-		// Use these two functions as the main interfaces for transmog.
-		void EnableTransmog(uint32 guidLow, uint32 displayItem, Player* owner, uint8 slot);
-		bool DisableTransmog(Item* originalItem, Player* owner, uint8 slot);
+        // Use these two functions as the main interfaces for transmog.
+        void EnableTransmog(uint32 guidLow, uint32 displayItem, Player* owner, uint8 slot);
+        bool DisableTransmog(Item* originalItem, Player* owner, uint8 slot);
+
+        void SaveToDB(Player* owner);
 
         // Checks used in the transmogrification system
         bool ProperItemQuality(Item* transmogItem);
-		bool IsEnabled() { return sWorld.getConfig(CONFIG_BOOL_TRANSMOG_ENABLED); }
+	bool IsEnabled() { return sWorld.getConfig(CONFIG_BOOL_TRANSMOG_ENABLED); }
 
-	private:
-        typedef UNORDERED_MAP<uint32, uint32> TransmogMap;
-        TransmogMap m_transmogMap;
+        private:
+            typedef UNORDERED_MAP<uint32, uint32> TransmogMap;
+            TransmogMap m_transmogMap;
 };
 
 #define sTransmogrification MaNGOS::Singleton<Transmogrification>::Instance()

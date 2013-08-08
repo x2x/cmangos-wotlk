@@ -11561,9 +11561,15 @@ void Player::SetVisibleItemSlot(uint8 slot, Item* pItem)
 {
     if (pItem)
     {
-    	if(uint32 entry = sTransmogrification.GetDisplayItemEntry(pItem->GetGUIDLow()))
-			SetUInt32Value(PLAYER_VISIBLE_ITEM_1_ENTRYID + (slot * 2), entry);
-		else
+        if(sTransmogrification.IsEnabled())
+        {
+            // bad - inefficient way to load data
+            if(uint32 entry = sTransmogrification.GetDisplayItemEntry(this, pItem->GetGUIDLow()))
+                SetUInt32Value(PLAYER_VISIBLE_ITEM_1_ENTRYID + (slot * 2), entry);
+            else
+                SetUInt32Value(PLAYER_VISIBLE_ITEM_1_ENTRYID + (slot * 2), pItem->GetEntry());
+        }
+        else
             SetUInt32Value(PLAYER_VISIBLE_ITEM_1_ENTRYID + (slot * 2), pItem->GetEntry());
         SetUInt16Value(PLAYER_VISIBLE_ITEM_1_ENCHANTMENT + (slot * 2), 0, pItem->GetEnchantmentId(PERM_ENCHANTMENT_SLOT));
         SetUInt16Value(PLAYER_VISIBLE_ITEM_1_ENCHANTMENT + (slot * 2), 1, pItem->GetEnchantmentId(TEMP_ENCHANTMENT_SLOT));
@@ -11692,7 +11698,7 @@ void Player::MoveItemFromInventory(uint8 bag, uint8 slot, bool update)
     if (Item* it = GetItemByPos(bag, slot))
     {
     	if(sTransmogrification.IsEnabled())
-    	    sTransmogrification.DeleteItemFromDB(it->GetGUIDLow());
+    	    sTransmogrification.DeleteItemFromDB(this, it->GetGUIDLow());
         ItemRemovedQuestCheck(it->GetEntry(), it->GetCount());
         RemoveItem(bag, slot, update);
 
@@ -17645,6 +17651,10 @@ void Player::SaveToDB()
     // save pet (hunter pet level and experience and all type pets health/mana).
     if (Pet* pet = GetPet())
         pet->SavePetToDB(PET_SAVE_AS_CURRENT);
+
+    // save transmogrification information
+    if(sTransmogrification.IsEnabled())
+        sTransmogrification.SaveToDB(this);
 }
 
 // fast save function for item/money cheating preventing - save only inventory and money state

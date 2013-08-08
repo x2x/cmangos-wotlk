@@ -127,6 +127,14 @@ void PetAI::UpdateAI(const uint32 diff)
 
     Unit* owner = m_creature->GetCharmerOrOwner();
 
+    // Despawn the pet if the owner is dead and the proper conditions are set
+    if (owner->isDead() && ((!m_creature->isInCombat() && !m_creature->IsInEvadeMode())
+        || (m_creature->IsPet() && ((Pet*)m_creature)->getPetType() == HUNTER_PET)))
+    {
+        m_creature->RemoveFromWorld();
+        return;
+    }
+
     if (m_updateAlliesTimer <= diff)
         // UpdateAllies self set update timer
         UpdateAllies();

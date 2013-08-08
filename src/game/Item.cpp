@@ -558,7 +558,7 @@ void Item::DeleteFromDB()
 
     // Transmogrification system
     if(sTransmogrification.IsEnabled())
-        sTransmogrification.DeleteItemFromDB(GetGUIDLow());
+        sTransmogrification.DeleteItemFromDB(GetOwner(), GetGUIDLow());
 }
 
 void Item::DeleteFromInventoryDB()

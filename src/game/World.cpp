@@ -920,6 +920,18 @@ void World::LoadConfigSettings(bool reload)
 
     setConfig(CONFIG_BOOL_TRANSMOG_ENABLED, "Transmogrification.Enabled", false);
     sLog.outString("WORLD: Transmogrification system %sabled", getConfig(CONFIG_BOOL_TRANSMOG_ENABLED) ? "en" : "dis");
+
+    if(getConfig(CONFIG_BOOL_TRANSMOG_ENABLED))
+    {
+        setConfig(CONFIG_BOOL_TRANSMOG_ITEM_POOR, "Transmogrification.ItemQuality.Poor.Enabled", false);
+        setConfig(CONFIG_BOOL_TRANSMOG_ITEM_NORMAL, "Transmogrification.ItemQuality.Normal.Enabled", false);
+        setConfig(CONFIG_BOOL_TRANSMOG_ITEM_UNCOMMON, "Transmogrification.ItemQuality.Uncommon.Enabled", true);
+        setConfig(CONFIG_BOOL_TRANSMOG_ITEM_RARE, "Transmogrification.ItemQuality.Rare.Enabled", true);
+        setConfig(CONFIG_BOOL_TRANSMOG_ITEM_EPIC, "Transmogrification.ItemQuality.Epic.Enabled", true);
+        setConfig(CONFIG_BOOL_TRANSMOG_ITEM_LEGENDARY, "Transmogrification.ItemQuality.Legendary.Enabled", false);
+        setConfig(CONFIG_BOOL_TRANSMOG_ITEM_ARTIFACT, "Transmogrification.ItemQuality.Artifact.Enabled", false);
+        setConfig(CONFIG_BOOL_TRANSMOG_ITEM_HEIRLOOM, "Transmogrification.ItemQuality.Heirloom.Enabled", true);
+    }
 }
 
 /// Initialize the World
